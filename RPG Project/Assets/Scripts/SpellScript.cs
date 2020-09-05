@@ -5,8 +5,13 @@ using UnityEngine;
 public class SpellScript : MonoBehaviour
 {
 
-    [SerializeField]
+    
     private float speed;
+    public void mySpeed(float speedValue)
+    {
+        speed = speedValue;
+    }
+ 
 
 
     [SerializeField]

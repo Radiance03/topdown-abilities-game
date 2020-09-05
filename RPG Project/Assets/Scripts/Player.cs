@@ -94,6 +94,7 @@ public class Player : Character
             {
                 
                 SpellScript s = Instantiate(newSpell.MySpellPrefab, exitPoints[exitIndex].position, Quaternion.identity).GetComponent<SpellScript>(); //instantiate the spell in the exitpoint and get the spellScript
+                s.mySpeed(spellBook.spells[spellIndex].MySpeed);
                 s.Initilize(currentTarget, newSpell.MyDamage);
             }
             StopAttack();
