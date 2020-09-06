@@ -2240,13 +2240,13 @@ MonoBehaviour:
   canvasGroup: {fileID: 38472641}
   spells:
   - name: LightningBolt
-    damage: 5
+    damage: 12
     icon: {fileID: 21300000, guid: dbd797ae886c39847aabdb0b80652216, type: 3}
-    speed: 5
-    castTime: 2.5
+    speed: 40
+    castTime: 3
     spellPrefab: {fileID: 3284346261434877572, guid: 515f4c446c078a646bacd457140aac30,
       type: 3}
-    cooldown: 3
+    cooldown: 8
     startAttackAnimation: 1
     barColor: {r: 0.96632445, g: 1, b: 0, a: 1}
   - name: Frostbolt
@@ -2266,7 +2266,7 @@ MonoBehaviour:
     castTime: 1
     spellPrefab: {fileID: 3284346261434877572, guid: 40089629a1a6a9944a1bbc77918b11fd,
       type: 3}
-    cooldown: 6
+    cooldown: 3
     startAttackAnimation: 0
     barColor: {r: 1, g: 0.03875816, b: 0, a: 1}
   textCooldown:
