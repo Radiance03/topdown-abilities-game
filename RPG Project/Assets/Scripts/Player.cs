@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,6 +30,7 @@ public class Player : Character
     }
     protected override void Start()
     {
+        Debug.Log("test");
         Debug.Log(PlayerPrefs.GetInt("AbilitySloth0"));
         Debug.Log(PlayerPrefs.GetInt("AbilitySloth1"));
         Debug.Log(PlayerPrefs.GetInt("AbilitySloth2"));
