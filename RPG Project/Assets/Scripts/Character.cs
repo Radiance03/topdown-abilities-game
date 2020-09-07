@@ -37,7 +37,7 @@ public abstract class Character : MonoBehaviour //Speed, Health, Animation
     protected virtual void Update()
     {
         
-        HandleLayers();
+        HandleLayers(); //Change animation layers based on the player statee
     }
     private void FixedUpdate()
     {
@@ -54,10 +54,11 @@ public abstract class Character : MonoBehaviour //Speed, Health, Animation
 
         if (IsMoving && !isAttacking)
         {
-            ActivateLayers("WalkLayer");
-            myAnimator.SetFloat("X", direction.x);
+            ActivateLayers("WalkLayer"); //WalkLayer
+            //Update the x and y values
+            myAnimator.SetFloat("X", direction.x); 
             myAnimator.SetFloat("Y", direction.y);
-            StopAttack();
+            StopAttack(); //make sure no attack is currently executed
         }
         else if (isAttacking)
         {
@@ -65,18 +66,18 @@ public abstract class Character : MonoBehaviour //Speed, Health, Animation
         }
         else 
         {
-            ActivateLayers("IdleLayer");
+            ActivateLayers("IdleLayer"); 
         }
 
     }
 
     public virtual void StopAttack()
     {
-        isAttacking = false; //for the layer
+        isAttacking = false; //for the layer, goes out of the attack animation
 
-        if (attackRoutine != null)
+        if (attackRoutine != null) //if attacking, stop the attack
         {
-            StopCoroutine(attackRoutine); //stop the attack roroutine
+            StopCoroutine(attackRoutine);
         }
         myAnimator.SetBool("attack", isAttacking); //set attack to false
 

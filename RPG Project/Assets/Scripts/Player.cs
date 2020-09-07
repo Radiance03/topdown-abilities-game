@@ -7,26 +7,27 @@ public class Player : Character
     
     public Transform MyTarget { get; set; }
 
-
-
+    
+    
+    
     [SerializeField] //to be set in mana stat
     private Stat mana;
     private float InitMana = 50;
 
     [SerializeField] //blocks for LineOfSight()
-    private Block[] blocks;
+    private Block[] blocks; //Limit player vision used by InLineOfSight()
 
-    private int exitIndex = 2; //for exitPoints
+    private int exitIndex = 2; //for exitPoints which is where the projectile spawns based on the animation
     private Spellbook spellBook;
 
     [SerializeField]
-    private Transform[] exitPoints;  
+    private Transform[] exitPoints; //Where the projectiles spawn  
     protected override void Update()
     {
-        
-        GetInput(); 
+         
+        GetInput(); //calculate the player input , Direction is to store movement, exitIndex is corresponding to the animation
        
-        base.Update();
+        base.Update(); //Preform the rest of update in Character after gaining input
     }
     protected override void Start()
     {
@@ -36,12 +37,10 @@ public class Player : Character
         Debug.Log(PlayerPrefs.GetInt("AbilitySloth2"));
 
 
-
-        //First Init spellbook and mana, then to the normal start
         spellBook = GetComponent<Spellbook>();
-        mana.Initialize(InitMana, InitMana);
+        mana.Initialize(InitMana, InitMana);//Initialize mana (Stat Script)
 
-        base.Start();
+        base.Start(); //Preform the rest of start in character
     }
 
    
@@ -107,7 +106,7 @@ public class Player : Character
     }
     public void CastSpell(int SpellIndex) //The first action after pressing the ability button
     {
-        Block(); //Set up the block boundaries for LineOfSight()
+        Block(); //Set up the vision block for LineOfSight()
 
         if (spellBook.cooldown[SpellIndex] == spellBook.spells[SpellIndex].MyCooldown && !isAttacking && inLineOfSight())
         {

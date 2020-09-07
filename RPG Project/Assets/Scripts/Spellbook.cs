@@ -4,9 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Spellbook : MonoBehaviour
 {
-    //stores the spell data,responsible for updating the casting bar popup upon spellcast
+    //Stores the Spells and their data, will also update the casting bar
 
     public GameObject GameManager;
+
     [SerializeField]
     private Image icon;
 
@@ -31,38 +32,37 @@ public class Spellbook : MonoBehaviour
     [SerializeField]
     public Text[] textCooldown;
 
-    public float[] cooldown; //Cooldown for each spell, written here instead of in spell for less power usage
+    public float[] cooldown; //Cooldown for each spell, Each row corresponds to a new spell
 
 
 
     private void Start()
     {
-        cooldown = new float[spells.Length];
+        cooldown = new float[spells.Length]; 
       
     }
     private void Update()
     {
-        CalculateCooldown();
+        CalculateCooldown(); 
     }
     private Coroutine spellRoutine;
 
-    public void CalculateCooldown()
+    public void CalculateCooldown() //Increase each cooldown value, Update the Fill and text for castingbar 
     {
-        for(int i = 0; i < cooldown.Length; i++)
+        for(int i = 0; i < cooldown.Length; i++) //Go through every cooldown
         {
-            spellCooldownFill[i].enabled = true;
+            spellCooldownFill[i].enabled = true; //Enable the chosen fill
+            cooldown[i] += Time.deltaTime; //Increase the cooldown time
+            spellCooldownFill[i].fillAmount = cooldown[i] / spells[i].MyCooldown; //Update the fill Amount
 
-            cooldown[i] += Time.deltaTime;
-
-            spellCooldownFill[i].fillAmount = cooldown[i] / spells[i].MyCooldown;
-            if (spells[i].MyCooldown < cooldown[i])
+            if (spells[i].MyCooldown < cooldown[i]) //if the the cooldown time is met
             {
-                spellCooldownFill[i].enabled = false;   
-                cooldown[i] = spells[i].MyCooldown;
+                spellCooldownFill[i].enabled = false;   //Distable fill
+                cooldown[i] = spells[i].MyCooldown; //Return cooldown value back to 0
               
             }
 
-            textCooldown[i].text = cooldown[i].ToString("f1");
+            textCooldown[i].text = cooldown[i].ToString("f1"); //Update text cooldown
             
 
         }
@@ -101,7 +101,7 @@ public class Spellbook : MonoBehaviour
         return spells[index];
     }
 
-    private IEnumerator FadedBar()
+    private IEnumerator FadedBar() //every frame will up progress by the speed Rate and update the alpha
     {
         float rate = 1.0f /0.15f;
 
@@ -118,7 +118,7 @@ public class Spellbook : MonoBehaviour
     }
     private IEnumerator Progress(int index)
     {
-        float timePassed = 0;
+        float timePassed = 0; //help display text and check if progress reached the duration of mycasttime
 
         float rate = 1.0f / spells[index].MyCastTime; 
 
@@ -126,14 +126,14 @@ public class Spellbook : MonoBehaviour
 
         while(progress <= 1.0) //works for the amount of time of MyCastTime
         {
-            castingBar.fillAmount = progress;
+            castingBar.fillAmount = progress; //Update CastingBar fill
 
             progress += rate * Time.deltaTime; // progress gets 1/CastTime each second
             timePassed += Time.deltaTime;
 
             castTime.text = (spells[index].MyCastTime - timePassed).ToString("F2");
 
-            if(spells[index].MyCastTime - timePassed < 0)
+            if(timePassed > spells[index].MyCastTime)
             {
                 castTime.text = "0.0";
                 canvasGroup.alpha = 0;
@@ -145,7 +145,7 @@ public class Spellbook : MonoBehaviour
     }
     public void StopCasting()
     {
-        if(spellRoutine != null)
+        if(spellRoutine != null) // set alpha to zero and stop coroutine and empty spellroutine
         {
             StopCoroutine(spellRoutine);
             spellRoutine = null;
