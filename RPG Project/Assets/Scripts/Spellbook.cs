@@ -69,7 +69,7 @@ public class Spellbook : MonoBehaviour
 
 
     }
-    public Spell CastSpell(int index) //all to do with the ui
+    public Spell CastSpell(int index) //all to do with the ui Returns the chosen spell
     {
         switch (index)
         {

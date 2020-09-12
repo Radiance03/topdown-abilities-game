@@ -7,9 +7,10 @@ public class Player : Character
     
     public Transform MyTarget { get; set; }
 
-    
-    
-    
+
+
+
+    int[] temp = new int[3];
     [SerializeField] //to be set in mana stat
     private Stat mana;
     private float InitMana = 50;
@@ -23,19 +24,22 @@ public class Player : Character
     [SerializeField]
     private Transform[] exitPoints; //Where the projectiles spawn  
     protected override void Update()
-    {
-         
+    {   
         GetInput(); //calculate the player input , Direction is to store movement, exitIndex is corresponding to the animation
+
+        if (isAttacking)
+        {
+            Vector2 AttackingFaceDirection = (MyTarget.transform.position - transform.position).normalized;
+            myAnimator.SetFloat("X", AttackingFaceDirection.x);
+            myAnimator.SetFloat("Y", AttackingFaceDirection.y);
+
+        }
        
+
         base.Update(); //Preform the rest of update in Character after gaining input
     }
     protected override void Start()
     {
-        Debug.Log("test");
-        Debug.Log(PlayerPrefs.GetInt("AbilitySloth0"));
-        Debug.Log(PlayerPrefs.GetInt("AbilitySloth1"));
-        Debug.Log(PlayerPrefs.GetInt("AbilitySloth2"));
-
 
         spellBook = GetComponent<Spellbook>();
         mana.Initialize(InitMana, InitMana);//Initialize mana (Stat Script)
@@ -76,23 +80,28 @@ public class Player : Character
     private IEnumerator Attack(int spellIndex) //called in CastSpell()
     {
 
+        float saveSpeed = speed;
         Transform currentTarget = MyTarget; //so changing myTarget wouldnt effect the Attack()
         Spell newSpell = spellBook.CastSpell(spellIndex); //newSpell stores the chosen spell based on spellIndex
-        if(!isAttacking && inLineOfSight()) //conditions for attacking
+        if(!isAttacking) //conditions for attacking
         {
             isAttacking = true; //for attack layer to be activated
 
             if (newSpell.MyStartAttackAnimation)
             {
+                speed = 2.5f;
+
                 myAnimator.SetBool("attack", isAttacking); //set attack to true
                 yield return new WaitForSeconds(newSpell.MyCastTime); //do animation for the time of the spell
+                speed = saveSpeed;
 
             }
 
 
-            if (currentTarget != null && inLineOfSight())
+            if (currentTarget != null)
             {
-                
+                PlayerLookAtTarget();
+
                 SpellScript s = Instantiate(newSpell.MySpellPrefab, exitPoints[exitIndex].position, Quaternion.identity).GetComponent<SpellScript>(); //instantiate the spell in the exitpoint and get the spellScript
                 s.mySpeed(spellBook.spells[spellIndex].MySpeed);
                 s.Initilize(currentTarget, newSpell.MyDamage);
@@ -106,21 +115,73 @@ public class Player : Character
     }
     public void CastSpell(int SpellIndex) //The first action after pressing the ability button
     {
-        Block(); //Set up the vision block for LineOfSight()
 
-        if (spellBook.cooldown[SpellIndex] == spellBook.spells[SpellIndex].MyCooldown && !isAttacking && inLineOfSight())
+        //Block(); //Set up the vision block for LineOfSight()
+
+        if (PlayerLookAtTarget())
         {
-            spellBook.cooldown[SpellIndex] = 0;
-
-            if (MyTarget != null && !isAttacking && inLineOfSight()) //conditions
+            if (spellBook.cooldown[SpellIndex] == spellBook.spells[SpellIndex].MyCooldown && !isAttacking)
             {
-                attackRoutine = StartCoroutine(Attack(SpellIndex));
+                spellBook.cooldown[SpellIndex] = 0;
+
+                if (MyTarget != null && !isAttacking) //conditions
+                {
+                    attackRoutine = StartCoroutine(Attack(SpellIndex));
+
+                }
 
             }
+        }
+    
+    }
+
+    private bool PlayerLookAtTarget() //Faces the player in the direction of MyTarget
+    {
+        for (int i = 0; i < blocks.Length; i++) //go through every block and test it
+        {
+            BlockWithArgument(i);
+            if (inLineOfSight()) //the current block is the one that is facing the player
+            {
+
+
+                //for all cases
+                if (i == 0)
+                {
+                    exitIndex = 0;
+
+                    myAnimator.SetFloat("X", 0);
+                    myAnimator.SetFloat("Y", -1);
+
+                }
+                if (i == 1)
+                {
+                    exitIndex = 1;
+
+                    myAnimator.SetFloat("X", -1);
+                    myAnimator.SetFloat("Y", 0);
+                }
+                if (i == 2)
+                {
+                    exitIndex = 2;
+
+                    myAnimator.SetFloat("X", 1);
+                    myAnimator.SetFloat("Y", 0);
+                }
+                if (i == 3)
+                {
+                    exitIndex = 3;
+
+                    myAnimator.SetFloat("X", 0);
+                    myAnimator.SetFloat("Y", 1);
+                }
+
+
+                return true;
+            }
+
 
         }
-       
-
+        return false;
     }
 
     private bool inLineOfSight()
@@ -148,9 +209,27 @@ public class Player : Character
 
         blocks[exitIndex].Activate();
     }
-    public override void StopAttack()
+    private void BlockWithArgument(int index)
+    {
+        foreach (Block b in blocks)
+        {
+            b.Deactivate();
+        }
+
+        blocks[index].Activate();
+    }
+    public void StopAttack()
     {
         spellBook.StopCasting();
-        base.StopAttack(); 
+        isAttacking = false; //for the layer
+
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine); //stop the attack roroutine
+        }
+        myAnimator.SetBool("attack", isAttacking); //set attack to false
+
     }
+
+
 }
