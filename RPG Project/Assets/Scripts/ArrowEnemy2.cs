@@ -44,7 +44,7 @@ public class ArrowEnemy2 : MonoBehaviour
     {
         if(collision.tag == "Player") //if hit player deal damage and destroy
         {
-            collision.GetComponent<Character>().TakeDamage(5);
+            collision.GetComponent<Character>().TakeDamage(15);
             Destroy(gameObject);
 
         }

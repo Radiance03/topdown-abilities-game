@@ -5,7 +5,6 @@ using UnityEngine;
 public class SpellScript : MonoBehaviour
 {
 
-    
     private float speed;
     public void mySpeed(float speedValue)
     {
@@ -53,6 +52,7 @@ public class SpellScript : MonoBehaviour
         {
             speed = 0;
             collision.GetComponentInParent<Enemy>().TakeDamage(damage);
+         
             GetComponent<Animator>().SetTrigger("Impact");
             myRigidBody.velocity = new Vector2(0, 0);
             MyTarget = null;

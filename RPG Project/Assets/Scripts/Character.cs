@@ -6,6 +6,8 @@ public abstract class Character : MonoBehaviour //Speed, Health, Animation
 {
     protected Vector2 direction;  //changed in players  
     [SerializeField] protected float speed;
+
+  
     private protected bool isDead = false;
     private protected bool isAttacking = false; //set to true in attack() and to false in stopattack()
     protected Coroutine attackRoutine; //assigned in player so we can cancel the coroutine
