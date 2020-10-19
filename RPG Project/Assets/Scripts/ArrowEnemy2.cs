@@ -36,7 +36,7 @@ public class ArrowEnemy2 : MonoBehaviour
     void Update()
     {
 
-        myRigidbody.velocity = direction.normalized * 3; //go in the direction
+        myRigidbody.velocity = direction.normalized * 5; //go in the direction
 
     }
 

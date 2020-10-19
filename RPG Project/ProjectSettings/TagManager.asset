@@ -8,6 +8,11 @@ TagManager:
   - HitBox
   - AbilitySelectFrame
   - AbilitySelectIcon
+  - FireSpell
+  - FrostSpell
+  - LightningSpell
+  - ShieldSelectIcon
+  - SorcerySelectIcon
   layers:
   - Default
   - TransparentFX

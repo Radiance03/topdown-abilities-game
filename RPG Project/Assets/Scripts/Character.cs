@@ -7,6 +7,15 @@ public abstract class Character : MonoBehaviour //Speed, Health, Animation
     protected Vector2 direction;  //changed in players  
     [SerializeField] protected float speed;
 
+    private float OGSpeed;
+    public float MyOGSpeed
+    {
+        get
+        {
+            return OGSpeed;
+        }
+    }
+
   
     private protected bool isDead = false;
     private protected bool isAttacking = false; //set to true in attack() and to false in stopattack()
@@ -33,6 +42,7 @@ public abstract class Character : MonoBehaviour //Speed, Health, Animation
 
     protected virtual void Start()
     {
+        OGSpeed = speed;
         health.Initialize(InitHealth, InitHealth); //HP stat init
 
         //rb and animator
@@ -66,7 +76,7 @@ public abstract class Character : MonoBehaviour //Speed, Health, Animation
         }
         else if (isAttacking && !isDead)
         {
-            Debug.Log("test");
+
             ActivateLayers("AttackLayer");
         }
         else if (isDead)

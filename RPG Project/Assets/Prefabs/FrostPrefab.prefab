@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7318178794097384964}
   - component: {fileID: 1107834905799993331}
-  - component: {fileID: -6582377856857997391}
   - component: {fileID: 3872712923665672027}
   - component: {fileID: 4763740896609620018}
   - component: {fileID: 4500141754933092912}
+  - component: {fileID: 8245060583646628585}
   m_Layer: 0
   m_Name: FrostPrefab
   m_TagString: Untagged
@@ -85,20 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-6582377856857997391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3284346261434877572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 363eb8f39060f3e4383cf6ac9f1762b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hasDebuff: 1
-  damage: 8
 --- !u!50 &3872712923665672027
 Rigidbody2D:
   serializedVersion: 4
@@ -165,3 +151,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8245060583646628585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3284346261434877572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07d1348e788c3944bda055f08fb4f67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boxCol: {fileID: 4763740896609620018}
+  damage: 4

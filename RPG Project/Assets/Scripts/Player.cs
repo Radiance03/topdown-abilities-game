@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : Character
 {
     
-    public Transform MyTarget { get; set; }
+    public Vector2 MyTarget { get; set; }
 
 
 
@@ -29,15 +29,24 @@ public class Player : Character
 
         if (isAttacking)
         {
-            Vector2 AttackingFaceDirection = (MyTarget.transform.position - transform.position).normalized;
-            myAnimator.SetFloat("X", AttackingFaceDirection.x);
-            myAnimator.SetFloat("Y", AttackingFaceDirection.y);
+            if(MyTarget != null)
+            {
+                Vector2 AttackingFaceDirection = (MyTarget - (Vector2)transform.position).normalized;
+                myAnimator.SetFloat("X", AttackingFaceDirection.x);
+                myAnimator.SetFloat("Y", AttackingFaceDirection.y);
+            }
+         
 
         }
-       
+
+
+      
 
         base.Update(); //Preform the rest of update in Character after gaining input
     }
+
+    
+  
     protected override void Start()
     {
 
@@ -76,65 +85,97 @@ public class Player : Character
         }
 
     }
+   
 
     private IEnumerator Attack(int spellIndex) //called in CastSpell()
     {
-
-        float saveSpeed = speed;
-        Transform currentTarget = MyTarget; //so changing myTarget wouldnt effect the Attack()
+        yield return null;
         Spell newSpell = spellBook.CastSpell(spellIndex); //newSpell stores the chosen spell based on spellIndex
-        if(!isAttacking) //conditions for attacking
+        float saveSpeed = speed; //Player Speed saved for casting animation slow down
+        Vector2 currentTarget = MyTarget; //so changing myTarget wouldnt effect the Attack()
+
+
+
+        // ----- ATTACK LOGIC ------
+        if (!isAttacking) //conditions for attacking
         {
             isAttacking = true; //for attack layer to be activated
 
-            if (newSpell.MyStartAttackAnimation)
+            PlayerLookAtTarget();
+            if (newSpell.MyStartAttackAnimation) // ANIMATION CASE
             {
-                speed = 2.5f;
-
+                speed = 2.5f; //Player Speed slowed
                 myAnimator.SetBool("attack", isAttacking); //set attack to true
+                if (newSpell.MyInstantInstantiate) //if for Instantiate Before cooldown
+                {
+                    Instantiate(newSpell.MySpellPrefab, transform.position, Quaternion.identity);
+
+                }
                 yield return new WaitForSeconds(newSpell.MyCastTime); //do animation for the time of the spell
-                speed = saveSpeed;
+                speed = saveSpeed; //speed back to normal after spell cast
 
             }
 
 
-            if (currentTarget != null)
-            {
+
+
+            AttackLogic(spellIndex, newSpell, currentTarget);
+            
+            StopAttack();
+        }
+    }
+
+    private void AttackLogic(int spellIndex, Spell newSpell, Vector2 currentTarget)
+    {
+        if (newSpell.MyBasicSpell) //  BASIC SPELL ATTACK CASE
+        {
+
+        
                 PlayerLookAtTarget();
 
                 SpellScript s = Instantiate(newSpell.MySpellPrefab, exitPoints[exitIndex].position, Quaternion.identity).GetComponent<SpellScript>(); //instantiate the spell in the exitpoint and get the spellScript
                 s.mySpeed(spellBook.spells[spellIndex].MySpeed);
-                s.Initilize(currentTarget, newSpell.MyDamage);
-            }
-            StopAttack();
-
-
+                s.InitilizeV3(Camera.main.ScreenToWorldPoint(Input.mousePosition), newSpell.MyDamage);
+            
         }
 
+        else //INSTANT DROP CASE
+        {
+            if(newSpell.MyName == "Teleport")
+            {
+                TelportationAbility();
+            }
 
+        }
     }
+
+    private void TelportationAbility()
+    {
+        transform.position = new Vector2(0, 0);
+    }
+
+
+
     public void CastSpell(int SpellIndex) //The first action after pressing the ability button
     {
+        Spell newSpell = spellBook.CastSpell(SpellIndex);
 
         //Block(); //Set up the vision block for LineOfSight()
 
-        if (PlayerLookAtTarget())
-        {
+   
+        
             if (spellBook.cooldown[SpellIndex] == spellBook.spells[SpellIndex].MyCooldown && !isAttacking)
             {
                 spellBook.cooldown[SpellIndex] = 0;
 
-                if (MyTarget != null && !isAttacking) //conditions
+                if (!isAttacking) //conditions
                 {
-                    attackRoutine = StartCoroutine(Attack(SpellIndex));
-
+                    attackRoutine = StartCoroutine(Attack(SpellIndex)); //main attack
                 }
 
             }
-        }
-    
+        
     }
-
     private bool PlayerLookAtTarget() //Faces the player in the direction of MyTarget
     {
         for (int i = 0; i < blocks.Length; i++) //go through every block and test it
@@ -186,16 +227,15 @@ public class Player : Character
 
     private bool inLineOfSight()
     {
-        if(MyTarget != null)
-        {
-            Vector3 targetDirection = (MyTarget.transform.position - transform.position).normalized; //the vector that points to the target
+      
+            Vector3 targetDirection = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized; //the vector that points to the target
             Debug.DrawRay(transform.position, targetDirection, Color.red); //debug ray
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, targetDirection, Vector2.Distance(transform.position, MyTarget.transform.position), 256);// throw a raycast from our position to the direction of the raycast with a 
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, targetDirection, Vector2.Distance(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition)), 256);// throw a raycast from our position to the direction of the raycast with a 
             if (hit.collider == null) //if no contact it means there is a direct line from target to player else its blocked my the 256 layer
             {
                 return true;
             }
-        }
+        
 
         return false;
 
@@ -231,5 +271,8 @@ public class Player : Character
 
     }
 
+
+
+    
 
 }

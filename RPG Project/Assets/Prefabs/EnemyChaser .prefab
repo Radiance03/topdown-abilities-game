@@ -469,11 +469,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58c4fc784bc5f1847833f1f0f539d1ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1.3
+  speed: 1
   InitHealth: 10
   health: {fileID: 8582173206259318794}
-  DistanceForAttack: 1.3
+  attackWaitForSeconds: 1
+  DamageDeal: 5
   hasProjectile: 0
+  originalSpeed: 0
+  DistanceForAttack: 1.3
   Projectile: {fileID: 1176369566720566264, guid: de00bdf026ed2e64b87c657939721938,
     type: 3}
 --- !u!1 &8582173207680793103

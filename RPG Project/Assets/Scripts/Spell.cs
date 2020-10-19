@@ -39,6 +39,19 @@ public class Spell
     [SerializeField]
     private bool startAttackAnimation;
 
+    [SerializeField]
+    private bool TargetIsRequired;
+
+    // [SerializeField]
+    //private bool AimUsingMouse;
+
+    // [SerializeField]
+    //private bool NoRequirements;
+    [SerializeField]
+    private bool InstantInstantiate;
+
+    
+
 
 
     [SerializeField]
@@ -53,7 +66,13 @@ public class Spell
     public Color MyBarColor { get => barColor; }
     public bool MyStartAttackAnimation { get => startAttackAnimation; }
     public float MyCooldown { get => cooldown; }
+    public bool MyBasicSpell { get => TargetIsRequired; }
+    // public bool MyAimByMouse { get => AimUsingMouse; }
+    //  public bool MyNoRequirements { get => NoRequirements; }
+    public bool MyInstantInstantiate { get => InstantInstantiate; }
 
-  
+
+
+
 
 }

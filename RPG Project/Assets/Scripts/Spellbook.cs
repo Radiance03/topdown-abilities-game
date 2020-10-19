@@ -49,11 +49,11 @@ public class Spellbook : MonoBehaviour
 
     public void CalculateCooldown() //Increase each cooldown value, Update the Fill and text for castingbar 
     {
-        for(int i = 0; i < cooldown.Length; i++) //Go through every cooldown
+        for(int i = 0; i < spellCooldownFill.Length; i++) //Go through every cooldown
         {
             spellCooldownFill[i].enabled = true; //Enable the chosen fill
-            cooldown[i] += Time.deltaTime; //Increase the cooldown time
             spellCooldownFill[i].fillAmount = cooldown[i] / spells[i].MyCooldown; //Update the fill Amount
+            cooldown[i] += Time.deltaTime; //Increase the cooldown time
 
             if (spells[i].MyCooldown < cooldown[i]) //if the the cooldown time is met
             {
@@ -84,7 +84,7 @@ public class Spellbook : MonoBehaviour
                 break;
           
         }
-
+        /*
         if (spells[index].MyStartAttackAnimation)
         {
             castingBar.fillAmount = 0;
@@ -96,6 +96,7 @@ public class Spellbook : MonoBehaviour
             StartCoroutine(FadedBar());
             spellRoutine = StartCoroutine(Progress(index));
         }
+       */
      
 
         return spells[index];

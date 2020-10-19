@@ -16,6 +16,7 @@ public class AbilitySelect : MonoBehaviour
     [SerializeField]
     private GameObject[] AbilitiesIcon;
 
+
     private Vector3[] AbilitiesIconPos;
 
     private void Update()
@@ -33,6 +34,47 @@ public class AbilitySelect : MonoBehaviour
 
     }
 
+    private void ArrangingIcons(int num,RaycastHit2D hit)
+    {
+
+    
+
+   
+
+            if (AbilitySloth[num].transform.position == hit.transform.position) //if its true it means the icon is on a sloth
+            {
+                for (int i = 0; i < AbilitiesIcon.Length; i++) //Finding the correct icon and getting it back to its place
+                {
+                    if (AbilitiesIcon[i].name == hit.transform.name)
+                    {
+                        hit.transform.position = AbilitiesIconPos[i];
+
+                        return;
+
+
+                    }
+
+                }
+            }
+
+
+            for (int j = 0; j < AbilitiesIcon.Length; j++) //will make sure the chosen sloth doesnt have any icon
+            {
+                if (AbilitiesIcon[j].transform.position == AbilitySloth[num].transform.position)
+                {
+                    test = true; //already an ability is in place
+                }
+            }
+            if (!test) //only if no icon ther is it will do this
+            {
+                hit.transform.position = AbilitySloth[num].transform.position;
+
+            }
+
+
+
+        
+    }
     private void ClickTarget()
     {
 
@@ -43,69 +85,38 @@ public class AbilitySelect : MonoBehaviour
 
             if (hit.collider != null) //if hit something with tag "enemy" set player.MyTarget to the hitbox of said enemy
             {
-                if (hit.collider.tag == "AbilitySelectFrame")
-                {
-
-
-                    MarkChosenFrame.transform.position = hit.transform.position;
-
-                    return;
-
-                }
+       
 
                 if (hit.collider.tag == "AbilitySelectIcon")
                 {
-                    for (int j = 0; j < AbilitiesIcon.Length; j++)
-                    {
-
-                        if (AbilitySloth[j].transform.position == hit.transform.position) //if its true it means the icon is on a sloth
-                        {
-                            for (int i = 0; i < AbilitiesIcon.Length; i++)
-                            {
-                                if (AbilitiesIcon[i].name == hit.transform.name) //if its true we find i which is the origin point
-                                {
-                                    hit.transform.position = AbilitiesIconPos[i]; //we get it the fuck back to the origin point and make the frametaken false
-                             
-                                    return;
-
-
-                                }
-
-                            }
-                        }
-
-                    }
-
-
-                    for (int i = 0; i < AbilitiesIcon.Length; i++)
-                    {
-                        if(MarkChosenFrame.transform.position == AbilitySloth[i].transform.position) //Figure out on which sloth MarkChosenFrame is
-                        {
-                            for(int j = 0; j < AbilitiesIcon.Length; j++) //will make sure the chosen sloth doesnt have any icon
-                            {
-                                if(AbilitiesIcon[j].transform.position == AbilitySloth[i].transform.position)
-                                {
-                                    test = true;
-                                }
-                                
-
-                            
-
-                            
-                            }
-                            if (!test) //only if no icon ther is it will do this
-                            {
-                                hit.transform.position = MarkChosenFrame.transform.position;
-
-                            }
-
-                        }
-                    }
-          
+                    ArrangingIcons(1, hit);
                 }
 
-                
+
+
             
+
+                if (hit.collider.tag == "ShieldSelectIcon")
+                {
+                    ArrangingIcons(0, hit);
+
+
+
+
+
+
+                }
+
+                if (hit.collider.tag == "SorcerySelectIcon")
+                {
+                    ArrangingIcons(2, hit);
+
+
+
+
+
+
+                }
 
             }
           
@@ -125,7 +136,7 @@ public class AbilitySelect : MonoBehaviour
 
                 if (AbilitySloth[i].transform.position == AbilitiesIcon[j].transform.position)
                 {
-                    PlayerPrefs.SetInt("AbilitySloth" + i.ToString(), j); 
+                    PlayerPrefs.SetInt("AbilitySloth" + i.ToString(), j);
                     break;
                 }
             }
@@ -133,6 +144,6 @@ public class AbilitySelect : MonoBehaviour
         }
         
 
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Map");
     }
 }

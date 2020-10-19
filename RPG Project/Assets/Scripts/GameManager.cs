@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour    
 {
     [SerializeField]
+    private Button[] b;
+    [SerializeField]
     private GameObject[] Abilities;
 
 
@@ -23,8 +25,28 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
        InitializeAbilityBoard();
+        InitializeEnemies();
     }
 
+
+  
+    [SerializeField]
+    private int NumberOfEnemies;
+    [SerializeField]
+    private GameObject []Enemies;
+    [SerializeField]
+    private Vector2[] EnemiesSpawn;
+
+   
+    private void InitializeEnemies()
+    {
+        for(int i = 0; i < NumberOfEnemies; i++)
+        {
+            var q = Instantiate(Enemies[i], EnemiesSpawn[i], Quaternion.identity);
+
+        
+        }
+    }
     private void InitializeAbilityBoard()
     {
         AbilityUsage = new int[Abilities.Length];
@@ -32,10 +54,12 @@ public class GameManager : MonoBehaviour
         {
             Abilities[i].GetComponent<Image>().sprite = existingAbilities[(PlayerPrefs.GetInt("AbilitySloth" + i.ToString()))].sprite;
             AbilityUsage[i] = PlayerPrefs.GetInt("AbilitySloth" + i.ToString());
+
         }
     }
     void Update()
     {
+        ButtonKeyboardInteractable();
         ClickTarget();
         TargetCrossPlacement();
     }
@@ -45,7 +69,7 @@ public class GameManager : MonoBehaviour
         if (player.MyTarget != null)
         {
             TargetCross.SetActive(true);
-            TargetCross.transform.position = player.MyTarget.transform.position;
+            TargetCross.transform.position = player.MyTarget;
 
         }
         else
@@ -62,20 +86,37 @@ public class GameManager : MonoBehaviour
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero,Mathf.Infinity,512); //send a raycast on the mouselick
 
-            if(hit.collider != null) //if hit something with tag "enemy" set player.MyTarget to the hitbox of said enemy
-            {
-                if(hit.collider.tag == "Enemy")
-                {
+            player.MyTarget= new Vector2(0,0);
+            player.CastSpell(1);
 
-                    player.MyTarget = hit.transform.GetChild(0);
 
-                }
-            }
-            else
-            {
-                player.MyTarget = null;
-            }
+
+
+
         }
        
     }
+    public void ButtonKeyboardInteractable()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            b[0].onClick.Invoke();
+
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            b[1].onClick.Invoke();
+
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            b[2].onClick.Invoke();
+
+        }
+
+    }
 }
+
+
+
+

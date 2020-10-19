@@ -4,11 +4,25 @@ using UnityEngine;
 
 public class Enemy : NPC
 {
-
+    public int attackWaitForSeconds = 1;
     [SerializeField]
     protected float DamageDeal;
     [SerializeField]
     protected bool hasProjectile;
+
+
+    public float EnemySpeed {
+        get
+        {
+            return speed;
+        }
+        set
+        {
+            speed = value;
+        }
+    }
+    public float originalSpeed;
+
 
     private Transform target;
     public Transform Target
@@ -34,10 +48,11 @@ public class Enemy : NPC
 
         if (!hasProjectile)//instantly take damage if the enemy is not a projectile type enemy
         {
+            Debug.Log("Attack");
             target.GetComponent<Character>().TakeDamage(DamageDeal);
 
         }
-        yield return new WaitForSeconds(1); //wait a second..
+        yield return new WaitForSeconds(attackWaitForSeconds); //wait a second..
 
   
         isAttacking = false; //attack is false and stop animation

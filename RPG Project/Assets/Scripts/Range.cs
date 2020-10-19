@@ -17,19 +17,22 @@ public class Range : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    private void OnTriggerStay2D(Collider2D collision) //Enter wont work when instantiated in player radius
     {
-       
-        if(collision.tag == "Player")
+        if (collision.tag == "Player")
         {
             enemyScript.Target = collision.transform;
-          
+        
+
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
+         
+
             enemyScript.Target = null;
         }
     }
